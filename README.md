@@ -15,6 +15,7 @@ A polished Electron + Vue desktop companion with Hello Kitty styling, transparen
 - **稳定性增强**：主进程 `uncaughtException` 和渲染进程错误会弹窗报告，方便定位打包后问题。
 - **可选 AI 陪聊**：支持 Qwen streaming chat，流式结果逐字显示在气泡里。
 - **Key 防误传**：`sk-` 消息会被本地保存并从请求历史中过滤，不会发给模型。
+- **监听清理**：组件卸载时清理流式 IPC 监听，开发热更新更稳定。
 - **打包配置完整**：Electron Builder 生成 Windows NSIS 安装包。
 
 ### 快速开始
@@ -54,6 +55,7 @@ QWEN_API_KEY=YOUR_API_KEY_HERE
 - **Better stability diagnostics** with main-process and renderer error reporting.
 - **Optional AI companion chat** using Qwen streaming responses.
 - **Key filtering**: `sk-` messages are stored locally and removed from model-bound history.
+- **Listener cleanup** removes streaming IPC handlers on unmount for more stable development hot reloads.
 - **Packaged Windows workflow** through Electron Builder and NSIS.
 
 ### Quick Start

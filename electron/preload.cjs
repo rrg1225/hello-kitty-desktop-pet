@@ -45,6 +45,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onQwenError: (callback) =>
     ipcRenderer.on('qwen-stream-error', (_event, msg) => callback(msg)),
 
+  offQwenEvents: () => {
+    ipcRenderer.removeAllListeners('qwen-stream-data')
+    ipcRenderer.removeAllListeners('qwen-stream-end')
+    ipcRenderer.removeAllListeners('qwen-stream-error')
+  },
+
   hideWindow: () => ipcRenderer.send('hide-window'),
 
   showContextMenu: () => ipcRenderer.send('show-context-menu'),
