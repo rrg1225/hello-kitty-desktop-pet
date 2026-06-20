@@ -10,6 +10,9 @@ Thumbs.db
 dist/
 dist-electron/
 release/
+resources/
+desktop-pet-core/
+*.asar
 
 # 忽略所有底层动态链接库和外壳文件（极其重要！）
 *.exe

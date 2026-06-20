@@ -1,5 +1,31 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
+function reportRendererError(error) {
+  ipcRenderer.send('renderer-crash', {
+    message: error?.message || String(error),
+    stack: error?.stack || '',
+    filename: error?.filename || '',
+    lineno: error?.lineno || null,
+    colno: error?.colno || null,
+  })
+}
+
+window.addEventListener('error', (event) => {
+  reportRendererError(event.error || {
+    message: event.message,
+    stack: `${event.filename}:${event.lineno}:${event.colno}`,
+    filename: event.filename,
+    lineno: event.lineno,
+    colno: event.colno,
+  })
+})
+
+window.addEventListener('unhandledrejection', (event) => {
+  reportRendererError(event.reason || {
+    message: 'Unhandled promise rejection',
+  })
+})
+
 contextBridge.exposeInMainWorld('electronAPI', {
   /**
    * @param {boolean} ignore true = 鼠标穿透；false = 捕获鼠标

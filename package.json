@@ -1,34 +1,30 @@
 {
-  "name": "desktop-pet-core",
+  "name": "hello-kitty-pet",
   "version": "1.0.0",
-  "private": true,
-  "type": "module",
+  "description": "Hello Kitty desktop pet built with Vue, Vite, and Electron.",
+  "author": "lixian",
+  "license": "MIT",
+  "productName": "Hello Kitty 桌宠",
   "main": "electron/main.js",
   "scripts": {
-    "dev": "concurrently -k \"vite\" \"wait-on http://localhost:5173 && electron .\"",
-    "build:win": "vite build && electron-builder --win",
-    "build:mac": "vite build && electron-builder --mac",
-    "build:linux": "vite build && electron-builder --linux",
-    "build:portable": "vite build && electron-builder --win portable",
-    "build": "vite build && electron-builder",
-    "start": "electron ."
+    "dev": "vite",
+    "build:renderer": "vite build",
+    "build": "vite build && electron-builder"
   },
   "dependencies": {
-    "dotenv": "^16.4.7",
-    "electron-store": "^11.0.2",
-    "vue": "^3.5.13"
+    "dotenv": "^17.4.2",
+    "electron-store": "^10.0.0",
+    "vue": "^3.5.34"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.1",
-    "concurrently": "^9.1.2",
-    "electron": "^35.0.1",
-    "electron-builder": "^26.8.1",
-    "vite": "^6.2.0",
-    "wait-on": "^8.0.3"
+    "@vitejs/plugin-vue": "^5.0.0",
+    "electron": "^35.7.5",
+    "electron-builder": "^24.13.3",
+    "vite": "^6.4.2"
   },
   "build": {
-    "appId": "com.rrg1225.cybercapybara",
-    "productName": "卡皮巴拉桌宠",
+    "appId": "com.desktop.hellokitty",
+    "productName": "Hello Kitty 桌宠",
     "directories": {
       "output": "release"
     },
@@ -38,13 +34,13 @@
       "package.json"
     ],
     "win": {
-      "target": "nsis",
-      "icon": "dist/assets/卡皮巴拉打工人努力工作卡通-qJMKFX1_.gif"
+      "target": [
+        "nsis"
+      ]
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true
+      "allowToChangeInstallationDirectory": true
     }
   }
 }

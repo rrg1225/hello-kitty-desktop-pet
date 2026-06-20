@@ -1,20 +1,14 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import path from 'path'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  base: './', // 极其重要：确保 Electron 能读取本地文件
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
-  },
-  base: './',
-  server: {
-    port: 5173,
-    strictPort: true,
-  },
+      '@': path.resolve(__dirname, './src')
+    }
+  }
 })

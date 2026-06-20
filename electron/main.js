@@ -1,5 +1,4 @@
-import 'dotenv/config'
-import { app, BrowserWindow, globalShortcut, Menu, Tray, ipcMain, nativeImage, screen } from 'electron'
+import { app, BrowserWindow, dialog, globalShortcut, Menu, Tray, ipcMain, nativeImage, screen } from 'electron'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import https from 'node:https'
@@ -7,8 +6,30 @@ import Store from 'electron-store'
 
 const store = new Store()
 
+process.on('uncaughtException', (error) => {
+  dialog.showErrorBox(
+    '糟糕，Kitty的脑电波断开了！(主进程崩溃)',
+    error?.stack || error?.message || String(error),
+  )
+})
+
+ipcMain.on('renderer-crash', (_event, error) => {
+  dialog.showErrorBox(
+    '糟糕，Kitty的渲染进程出错了！',
+    error?.stack || error?.message || String(error),
+  )
+})
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const isDev = !app.isPackaged
+
+if (isDev) {
+  try {
+    await import('dotenv/config')
+  } catch (error) {
+    console.warn('dotenv not loaded:', error?.message || error)
+  }
+}
 
 /** @type {BrowserWindow | null} */
 let mainWindow = null
@@ -226,7 +247,7 @@ ipcMain.on('chat-with-qwen', async (event, messages) => {
     // 4. 获取本地保存的 Key
     const apiKey = store.get('QWEN_API_KEY') || process.env.QWEN_API_KEY;
     if (!apiKey) {
-      event.sender.send('qwen-stream-error', '我还是一只没有灵魂的卡皮巴拉...请把 sk- 开头的 API Key 像聊天一样发给我吧！');
+      event.sender.send('qwen-stream-error', '我还是一只没有灵魂的Hello Kitty...请把 sk- 开头的 API Key 像聊天一样发给我吧！');
       return;
     }
 
@@ -283,11 +304,27 @@ ipcMain.on('chat-with-qwen', async (event, messages) => {
     event.sender.send('qwen-stream-end');
 
   } catch (error) {
-    console.error('卡皮巴拉脑内短路:', error);
+    console.error('Hello Kitty脑内短路:', error);
     // 即使出错，也要告诉前端，打破"思考中..."的死循环
     event.sender.send('qwen-stream-error', '罢工啦: ' + error.message);
   }
 });
+
+const gotLock = app.requestSingleInstanceLock()
+if (!gotLock) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore()
+      }
+      mainWindow.show()
+      mainWindow.focus()
+      setWindowMousePassthrough(true)
+    }
+  })
+}
 
 app.whenReady().then(() => {
   createWindow()

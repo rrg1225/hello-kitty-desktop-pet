@@ -31,7 +31,7 @@
           v-model="inputText"
           class="chat-input"
           type="text"
-          placeholder="和卡皮巴拉说点什么..."
+          placeholder="和Hello Kitty聊聊呀~🎀"
           :disabled="isStreaming || isPenalized"
           @keydown.enter="onSend"
         />
@@ -42,7 +42,7 @@
 
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue'
-import petImg from '@/assets/卡皮巴拉打工人努力工作卡通.gif'
+import petImg from '@/assets/hello-kitty.gif'
 import clickSound from '@/assets/click.mp3'
 import popSound from '@/assets/pop.mp3'
 import angrySound from '@/assets/angry.mp3'
@@ -50,10 +50,10 @@ import hmmSound from '@/assets/hmm.mp3'
 import laughSound from '@/assets/laugh.mp3'
 
 const quotes = [
-  '再摸鱼一会吧',
-  '努力打工中...',
-  '摸鱼是打工人的基本权利',
-  '今天也要加油鸭～',
+  '今天也要开心哦~',
+  'Kitty给你一个大大的拥抱！',
+  '主人辛苦啦，休息一下吧~',
+  '甜甜时光一起过🎀',
 ]
 
 const showBubble = ref(false)
@@ -66,13 +66,32 @@ const chatHistory = ref([
   {
     role: 'system',
     content:
-      '你是一只叫卡皮巴拉的桌面宠物。你的任务是用极简、幽默、治愈的话语舒缓打工人的心情。每次回复不超过30个字。',
+      '你是一个可爱的 Hello Kitty 桌面宠物。你的任务是用甜美、温柔、治愈的话语陪伴主人。每次回复不超过30个字，可以适当使用可爱的emoji。',
   },
 ])
 
 let clickCount = 0
 let lastClickTime = 0
 const isPenalized = ref(false)
+
+function showErrorBubble(message) {
+  currentQuote.value = 'Kitty出错啦：' + message
+  showBubble.value = true
+  if (hideTimer) clearTimeout(hideTimer)
+  hideTimer = setTimeout(() => {
+    showBubble.value = false
+    hideTimer = null
+  }, 8000)
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('error', (event) => {
+    showErrorBubble(event.error?.message || event.message || '未知错误')
+  })
+  window.addEventListener('unhandledrejection', (event) => {
+    showErrorBubble(event.reason?.message || '未处理的 Promise 拒绝')
+  })
+}
 
 const audioMap = {
   click: new Audio(clickSound),
@@ -161,7 +180,7 @@ function onPetClick() {
     clickCount = 0
     isPenalized.value = true
     playSound('angry')
-    currentQuote.value = '别点啦！卡皮巴拉要秃了！😾'
+    currentQuote.value = '哎呀，主人不要一直戳Kitty的头啦~🎀'
     showBubble.value = true
 
     if (hideTimer) clearTimeout(hideTimer)
@@ -288,13 +307,13 @@ onUnmounted(() => {
   left: 50%;
   transform: translateX(-50%);
   z-index: 20;
-  min-width: 120px;
-  max-width: 200px;
-  padding: 10px 14px;
-  background: #fffef8;
-  border: 2px solid #ffd6e8;
-  border-radius: 16px;
-  box-shadow: 0 4px 14px rgba(255, 143, 178, 0.35);
+  min-width: 140px;
+  max-width: 220px;
+  padding: 12px 16px;
+  background: radial-gradient(circle at top left, #fff6fb, #ffe8f2);
+  border: 2px solid #ffb6d5;
+  border-radius: 22px;
+  box-shadow: 0 8px 24px rgba(255, 182, 209, 0.28);
   -webkit-app-region: no-drag;
   pointer-events: auto;
 }
@@ -302,39 +321,39 @@ onUnmounted(() => {
 .speech-text {
   margin: 0;
   font-size: 13px;
-  line-height: 1.45;
-  color: #5c4a42;
+  line-height: 1.6;
+  color: #6f4964;
   text-align: center;
-  font-weight: 500;
+  font-weight: 600;
   white-space: pre-wrap;
   word-break: break-word;
-  max-height: 100px;
+  max-height: 110px;
   overflow-y: auto;
   padding-right: 4px;
 }
 
 .bubble-tail {
   position: absolute;
-  bottom: -9px;
+  bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 0;
-  border-left: 9px solid transparent;
-  border-right: 9px solid transparent;
-  border-top: 10px solid #ffd6e8;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 11px solid #ffb6d5;
 }
 
 .bubble-tail::after {
   content: '';
   position: absolute;
-  top: -12px;
-  left: -7px;
+  top: -13px;
+  left: -8px;
   width: 0;
   height: 0;
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-top: 8px solid #fffef8;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 9px solid #fff6fb;
 }
 
 .pet-image {
@@ -382,28 +401,29 @@ onUnmounted(() => {
 
 .chat-input {
   display: block;
-  width: 180px;
+  width: 190px;
   margin-top: 6px;
-  padding: 6px 10px;
+  padding: 8px 12px;
   border: none;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.35);
-  font-size: 12px;
-  color: #5c4a42;
+  border-radius: 16px;
+  background: rgba(255, 244, 250, 0.88);
+  font-size: 13px;
+  color: #6f4c6b;
   text-align: center;
   outline: none;
   -webkit-app-region: no-drag;
-  transition: background 0.25s ease;
+  transition: background 0.25s ease, transform 0.25s ease;
   box-sizing: border-box;
 }
 
 .chat-input::placeholder {
-  color: #b8a59e;
+  color: #c18aa8;
 }
 
 .chat-input:hover,
 .chat-input:focus {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 247, 252, 1);
+  transform: scale(1.01);
 }
 
 .bubble-fade-enter-active,
