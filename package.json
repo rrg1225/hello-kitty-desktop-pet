@@ -4,7 +4,7 @@
   "description": "Hello Kitty desktop pet built with Vue, Vite, and Electron.",
   "author": "lixian",
   "license": "MIT",
-  "productName": "Hello Kitty 桌宠",
+  "productName": "Hello Kitty Desktop Pet",
   "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
@@ -14,17 +14,17 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "electron-store": "^10.0.0",
-    "vue": "^3.5.34"
+    "vue": "^3.5.38"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",
     "electron": "^35.7.5",
     "electron-builder": "^24.13.3",
-    "vite": "^6.4.2"
+    "vite": "^6.4.3"
   },
   "build": {
     "appId": "com.desktop.hellokitty",
-    "productName": "Hello Kitty 桌宠",
+    "productName": "Hello Kitty Desktop Pet",
     "directories": {
       "output": "release"
     },

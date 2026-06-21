@@ -11,7 +11,7 @@ A polished Electron + Vue desktop companion with Hello Kitty styling, transparen
 ### 项目亮点
 
 - **可爱透明桌宠**：Electron 无边框透明窗口，适合长期悬浮在桌面角落。
-- **互动完整**：点击文案、拖拽移动、靠边吸附、自动隐藏、右键菜单、托盘控制。
+- **交互完整**：点击文案、拖拽移动、靠边吸附、自动隐藏、右键菜单和托盘控制。
 - **稳定性增强**：主进程 `uncaughtException` 和渲染进程错误会弹窗报告，方便定位打包后问题。
 - **可选 AI 陪聊**：支持 Qwen streaming chat，流式结果逐字显示在气泡里。
 - **Key 防误传**：`sk-` 消息会被本地保存并从请求历史中过滤，不会发给模型。
