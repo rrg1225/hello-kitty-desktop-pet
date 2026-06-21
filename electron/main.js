@@ -39,6 +39,8 @@ let tray = null
 
 const VISIBLE_PX = 30
 const SNAP_THRESHOLD = 20
+const MAX_CHAT_MESSAGES = 12
+const MAX_CHAT_CHARS = 500
 let isSnapped = false
 let snappedEdge = null
 let savedVisibleBounds = null
@@ -171,6 +173,16 @@ function createTray() {
   tray.setContextMenu(contextMenu)
 }
 
+function sanitizeChatMessages(messages = []) {
+  return messages
+    .filter((message) => message?.content && !String(message.content).trim().startsWith('sk-'))
+    .slice(-MAX_CHAT_MESSAGES)
+    .map((message) => ({
+      role: ['system', 'user', 'assistant'].includes(message.role) ? message.role : 'user',
+      content: String(message.content).slice(0, MAX_CHAT_CHARS),
+    }))
+}
+
 ipcMain.handle('set-ignore-mouse-events', (_event, ignore) => {
   setWindowMousePassthrough(Boolean(ignore))
 })
@@ -252,7 +264,7 @@ ipcMain.on('chat-with-qwen', async (event, messages) => {
     }
 
     // 5. 过滤历史记录：千万不能把带 sk- 的密钥发给大模型，否则大模型会报错
-    const cleanMessages = messages.filter(m => !m.content.startsWith('sk-'));
+    const cleanMessages = sanitizeChatMessages(messages);
 
     // 6. 发起正式请求（使用通义千问最稳的兼容端点）
     const response = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
