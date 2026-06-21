@@ -5,6 +5,7 @@
 A polished Electron + Vue desktop companion with Hello Kitty styling, transparent floating-window behavior, drag interactions, sound effects, crash reporting, and optional Qwen-powered chat.
 
 > Resume and interview brief: [PORTFOLIO.md](PORTFOLIO.md)
+> Enterprise architecture: [docs/ENTERPRISE_ARCHITECTURE.md](docs/ENTERPRISE_ARCHITECTURE.md)
 
 ---
 
