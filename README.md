@@ -1,65 +1,72 @@
 # Hello Kitty Desktop Pet
 
-[简体中文](#简体中文) | [English](#english)
+[![CI](https://github.com/rrg1225/hello-kitty-desktop-pet/actions/workflows/ci.yml/badge.svg)](https://github.com/rrg1225/hello-kitty-desktop-pet/actions/workflows/ci.yml)
+![Electron](https://img.shields.io/badge/Electron-Desktop-47848F?logo=electron)
+![Vue](https://img.shields.io/badge/Vue-3-42B883?logo=vuedotjs)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite)
+![Qwen](https://img.shields.io/badge/Qwen-Optional%20Chat-FF6A00)
 
-A polished Electron + Vue desktop companion with Hello Kitty styling, transparent floating-window behavior, drag interactions, sound effects, crash reporting, single-instance handling, and optional Qwen-powered chat.
+Hello Kitty Desktop Pet is a polished Electron + Vue desktop companion with a transparent floating window, drag interactions, sound effects, crash reporting, single-instance behavior, and optional Qwen-powered chat.
 
 > Resume and interview brief: [PORTFOLIO.md](PORTFOLIO.md)
 > Enterprise architecture: [docs/ENTERPRISE_ARCHITECTURE.md](docs/ENTERPRISE_ARCHITECTURE.md)
 
----
+## Features
 
-## 简体中文
+- Cute transparent frameless desktop pet.
+- Click quotes, dragging, edge snapping, auto-hide, context menu, and tray controls.
+- Main-process and renderer error reporting.
+- Single-instance lock that focuses the existing app on relaunch.
+- Optional Qwen streaming chat shown inside the speech bubble.
+- API key storage through `electron-store`.
+- Chat safety layer for `sk-` filtering, role normalization, and context truncation.
+- Electron Builder NSIS packaging configuration.
 
-### 项目亮点
+## Architecture
 
-- **可爱透明桌宠**：Electron 无边框透明窗口，适合长期悬浮在桌面角落。
-- **完整交互**：点击文案、拖拽移动、靠边吸附、自动隐藏、右键菜单和托盘控制。
-- **稳定性增强**：主进程异常和渲染进程错误会弹窗报告，便于定位打包后问题。
-- **单实例保护**：重复启动时聚焦已有窗口，避免多个桌宠实例互相干扰。
-- **可选 AI 陪聊**：支持 Qwen streaming chat，流式结果逐字显示在气泡里。
-- **Key 防误传**：`sk-` 消息会被本地保存，并从模型请求历史中移除。
-- **可测试安全模块**：`electron/chatSafety.js` 覆盖密钥过滤、上下文截断和角色白名单。
+```text
+Vue renderer
+  -> preload bridge
+  -> Electron main process
+  -> chat safety layer
+  -> Qwen-compatible streaming API
+```
 
-### 快速开始
+Key files:
+
+| Path | Purpose |
+| --- | --- |
+| `src/App.vue` | Pet UI, interactions, chat bubble |
+| `electron/main.js` | Window, tray, single-instance, IPC, Qwen streaming |
+| `electron/preload.cjs` | Safe IPC bridge and renderer error reporting |
+| `electron/chatSafety.js` | Key filtering and message bounding |
+
+## Quick Start
 
 ```bash
 npm install
 npm run dev
 ```
 
-### 常用命令
+## Build
 
 ```bash
-npm test
 npm run build:renderer
 npm run build
 ```
 
-### AI Key 设置
+Installer artifacts are written to `release/`.
 
-本地开发可复制 `.env.example` 为 `.env`：
+## AI Key Setup
+
+For local development, copy `.env.example` to `.env`:
 
 ```env
 QWEN_API_KEY=YOUR_API_KEY_HERE
 ```
 
-也可以在桌宠聊天框中发送 `sk-` 开头的 Key，应用会保存到本地 `electron-store`。
+You can also send an `sk-` key in the pet chat box. The app saves it locally with `electron-store` and filters it from model requests.
 
----
+## License
 
-## English
-
-### Highlights
-
-- **Cute transparent desktop pet** powered by a frameless Electron window.
-- **Complete interactions**: click quotes, dragging, edge snapping, auto-hide, context menu, and tray controls.
-- **Stability diagnostics** for main-process and renderer errors.
-- **Single-instance behavior** that focuses the existing app on relaunch.
-- **Optional Qwen companion chat** with streaming responses.
-- **Key filtering**: `sk-` messages are stored locally and removed from model-bound history.
-- **Tested chat safety module** for API key filtering, role normalization, and context bounds.
-
-### Repository Topics
-
-`electron`, `vue`, `vite`, `desktop-pet`, `desktop-app`, `qwen`
+MIT

@@ -9,7 +9,6 @@
   "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
-    "test": "node --test",
     "build:renderer": "vite build",
     "build": "vite build && electron-builder"
   },
