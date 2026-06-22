@@ -1,6 +1,7 @@
 {
   "name": "hello-kitty-pet",
   "version": "1.0.0",
+  "type": "module",
   "description": "Hello Kitty desktop pet built with Vue, Vite, and Electron.",
   "author": "lixian",
   "license": "MIT",
@@ -8,6 +9,7 @@
   "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
+    "test": "node --test",
     "build:renderer": "vite build",
     "build": "vite build && electron-builder"
   },

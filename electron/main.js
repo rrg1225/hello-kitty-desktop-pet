@@ -3,6 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import https from 'node:https'
 import Store from 'electron-store'
+import { buildQwenChatPayload, isApiKeyMessage } from './chatSafety.js'
 
 const store = new Store()
 
@@ -39,8 +40,6 @@ let tray = null
 
 const VISIBLE_PX = 30
 const SNAP_THRESHOLD = 20
-const MAX_CHAT_MESSAGES = 12
-const MAX_CHAT_CHARS = 500
 let isSnapped = false
 let snappedEdge = null
 let savedVisibleBounds = null
@@ -173,16 +172,6 @@ function createTray() {
   tray.setContextMenu(contextMenu)
 }
 
-function sanitizeChatMessages(messages = []) {
-  return messages
-    .filter((message) => message?.content && !String(message.content).trim().startsWith('sk-'))
-    .slice(-MAX_CHAT_MESSAGES)
-    .map((message) => ({
-      role: ['system', 'user', 'assistant'].includes(message.role) ? message.role : 'user',
-      content: String(message.content).slice(0, MAX_CHAT_CHARS),
-    }))
-}
-
 ipcMain.handle('set-ignore-mouse-events', (_event, ignore) => {
   setWindowMousePassthrough(Boolean(ignore))
 })
@@ -249,7 +238,7 @@ ipcMain.on('chat-with-qwen', async (event, messages) => {
     const lastMessage = messages[messages.length - 1]?.content || '';
 
     // 3. 拦截并吃掉 API Key
-    if (lastMessage.startsWith('sk-')) {
+    if (isApiKeyMessage(lastMessage)) {
       store.set('QWEN_API_KEY', lastMessage.trim());
       event.sender.send('qwen-stream-data', '吧唧吧唧...密钥吃掉啦！我现在有灵魂了，快和我聊天吧~ 🐾');
       event.sender.send('qwen-stream-end');
@@ -264,8 +253,6 @@ ipcMain.on('chat-with-qwen', async (event, messages) => {
     }
 
     // 5. 过滤历史记录：千万不能把带 sk- 的密钥发给大模型，否则大模型会报错
-    const cleanMessages = sanitizeChatMessages(messages);
-
     // 6. 发起正式请求（使用通义千问最稳的兼容端点）
     const response = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
       method: 'POST',
@@ -273,11 +260,7 @@ ipcMain.on('chat-with-qwen', async (event, messages) => {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        model: 'qwen-plus', // 这里用 qwen-plus，如果你之前用的其他模型可以改
-        messages: cleanMessages,
-        stream: true
-      })
+      body: JSON.stringify(buildQwenChatPayload(messages))
     });
 
     if (!response.ok) {
