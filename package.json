@@ -13,7 +13,9 @@
     "test": "npm run check && node --test test/*.test.js",
     "build:renderer": "vite build",
     "build": "vite build && electron-builder",
-    "health": "node scripts/project-health.js"
+    "health": "node scripts/project-health.js",
+    "ops:check": "node scripts/ops-check.js",
+    "ci:local": "npm run health && npm run ops:check && npm test && npm run build:renderer"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
@@ -46,5 +48,8 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     }
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
