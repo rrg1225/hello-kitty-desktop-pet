@@ -51,6 +51,7 @@ npm run dev
 ## Build
 
 ```bash
+npm test
 npm run build:renderer
 npm run build
 ```
@@ -66,6 +67,18 @@ QWEN_API_KEY=YOUR_API_KEY_HERE
 ```
 
 You can also send an `sk-` key in the pet chat box. The app saves it locally with `electron-store` and filters it from model requests.
+
+## Quality Gates
+
+- `npm test` syntax-checks Electron main, preload, and chat safety modules.
+- `npm run build:renderer` validates the Vue renderer bundle.
+- Release artifacts and local keys are ignored by Git.
+
+## Roadmap
+
+- Add signed auto-update metadata for distributable releases.
+- Add configurable animation and notification preferences.
+- Add renderer interaction tests for drag, snap, tray, and chat states.
 
 ## License
 

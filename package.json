@@ -9,6 +9,8 @@
   "main": "electron/main.js",
   "scripts": {
     "dev": "vite",
+    "check": "node --check electron/main.js && node --check electron/preload.cjs && node --check electron/chatSafety.js",
+    "test": "npm run check",
     "build:renderer": "vite build",
     "build": "vite build && electron-builder"
   },
