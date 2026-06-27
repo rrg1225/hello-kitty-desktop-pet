@@ -7,15 +7,15 @@ export function isApiKeyMessage(value) {
 }
 
 export function sanitizeChatMessages(messages = [], options = {}) {
-  const maxMessages = options.maxMessages ?? DEFAULT_MAX_MESSAGES;
-  const maxChars = options.maxChars ?? DEFAULT_MAX_CHARS;
+  const maxMessages = clampNumber(options.maxMessages, 1, 50, DEFAULT_MAX_MESSAGES);
+  const maxChars = clampNumber(options.maxChars, 1, 4000, DEFAULT_MAX_CHARS);
 
   return messages
-    .filter((message) => message?.content && !isApiKeyMessage(message.content))
+    .filter((message) => String(message?.content || "").trim() && !isApiKeyMessage(message.content))
     .slice(-maxMessages)
     .map((message) => ({
       role: ALLOWED_ROLES.has(message.role) ? message.role : "user",
-      content: String(message.content).slice(0, maxChars)
+      content: String(message.content).trim().slice(0, maxChars)
     }));
 }
 
@@ -25,4 +25,10 @@ export function buildQwenChatPayload(messages, options = {}) {
     messages: sanitizeChatMessages(messages, options),
     stream: true
   };
+}
+
+function clampNumber(value, min, max, fallback) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.max(min, Math.min(max, Math.round(parsed)));
 }
