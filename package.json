@@ -12,7 +12,8 @@
     "check": "node --check electron/main.js && node --check electron/preload.cjs && node --check electron/chatSafety.js",
     "test": "npm run check && node --test test/*.test.js",
     "build:renderer": "vite build",
-    "build": "vite build && electron-builder"
+    "build": "vite build && electron-builder",
+    "health": "node scripts/project-health.js"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
